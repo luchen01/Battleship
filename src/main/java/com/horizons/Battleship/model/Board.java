@@ -26,11 +26,14 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id")
-//    private User user;
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Board(){}
+    public Board(User currUser){
+        this.user = currUser;
+    }
     public Board(Set<Ship> shipOnBoard, Set<Grid> board){
         this.board = board;
         this.shipOnBoard = shipOnBoard;
@@ -74,11 +77,11 @@ public class Board {
         throw new RuntimeException("could not find element!");
     }
 
-//    public User getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

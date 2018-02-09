@@ -41,8 +41,9 @@ public class BoardController {
     }
 
     @RequestMapping(path="/createBoard", method= RequestMethod.POST)
-    public Board createBoard(){
-        Board newBoard = new Board();
+    public Board createBoard(@RequestBody Integer userId){
+        User currUser = userDao.findById(userId);
+        Board newBoard = new Board(currUser);
         System.out.print(newBoard.getId());
         Set newSet = new HashSet<>();
         Integer row = 1;
@@ -64,38 +65,28 @@ public class BoardController {
     public Board createBoardWithShip(@RequestBody Set<Grid> boardGrid,
                                      @RequestBody Set<Ship> shipsOnBoard){
         Board newBoard = new Board(shipsOnBoard, boardGrid);
+
         return boardDao.save(newBoard);
     }
 
-    @RequestMapping(path="/placeShip/{boardId}", method=RequestMethod.POST)
-    public Grid placeShip(@RequestBody Integer gridId,
-                           @PathVariable("boardId") Integer boardId){
-        System.out.println(gridId);
-        Ship newShip = shipDao.save(new Ship());
-        Grid newGrid = gridDao.findById(gridId);
-        newGrid.setShip(newShip);
-        return gridDao.save(newGrid);
+    @RequestMapping(path="/placeShip/{boardId}/{shipName}", method=RequestMethod.POST)
+    public Board placeShip(@RequestBody Set<Integer> gridSets,
+                           @PathVariable("boardId") Integer boardId,
+                           @PathVariable("shipName") String shipName){
 
-//        Board currBoard = boardDao.findById(boardId);
+        Ship newShip = shipDao.save(new Ship(shipName));
+        Board currBoard = boardDao.findById(boardId);
+        newShip.setBoard(currBoard);
 
-//        for(Integer gId: gridId){
-//            Grid newGrid = gridDao.findById(gridId);
-//            System.out.print(newGrid);
-//            Grid secondGrid = new Grid();
-//            Boolean saved= newShip.addGridToShip(gridDao.findById(gridId));
-//            System.out.println(saved);
-//        }
-//       return newShip;
-//        currBoard.addShip(newShip);
-//        return boardDao.save(currBoard);
-//        for(Grid temp : shipGrids){
-//            if(temp.getRow() == row && temp.getCol()==col){
-//                return temp;
-//            }
-//        }
-//
-//        Grid shipGrid = currBoard.findGrid(currBoard, row, col);
-//        shipGrid.setHasShip(true);
+        for(Integer gId: gridSets){
+            Grid newGrid = gridDao.findById(gId);
+            newGrid.setShip(newShip);
+            newShip.getShip().add(newGrid);
+            gridDao.save(newGrid);
+        }
+        shipDao.save(newShip);
+        currBoard.addShip(newShip);
+        return boardDao.save(currBoard);
 
     }
 

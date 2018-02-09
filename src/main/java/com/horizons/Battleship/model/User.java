@@ -15,13 +15,8 @@ public class User {
     private Integer id;
     private String username;
 
-//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    private Board userBoards;
-
-//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
-//            fetch = FetchType.LAZY, optional = false)
-//    private Board myBoard;
-
+    @OneToOne(cascade = CascadeType.ALL, mappedBy="user")
+    private Board userBoards;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -41,12 +36,12 @@ public class User {
         this.username = username;
     }
 
-//    public Board getMyBoard() {
-//        return myBoard;
-//    }
-//
-//    public void setMyBoard(Board myBoard) {
-//        this.myBoard = myBoard;
-//    }
+    public Board getUserBoards() {
+        return userBoards;
+    }
+
+    public void setUserBoards(Board userBoards) {
+        this.userBoards = userBoards;
+    }
 }
 
