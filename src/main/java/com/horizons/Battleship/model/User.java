@@ -1,48 +1,52 @@
 package com.horizons.Battleship.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name="users")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User {
-//    private Board myShips;
-//    private Board attacks;
-
-    @Id
-    @GeneratedValue
     private Integer id;
-
     private String username;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    private List<Board> boards;
+//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    private Board userBoards;
 
-//    public User(String username){
-//        this.username = username;
-//    }
+//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
+//            fetch = FetchType.LAZY, optional = false)
+//    private Board myBoard;
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    public Integer getId() {
+        return id;
+    }
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public List<Board> getBoards() {
-        return boards;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setBoards(List<Board> boards) {
-        this.boards = boards;
-    }
+//    public Board getMyBoard() {
+//        return myBoard;
+//    }
+//
+//    public void setMyBoard(Board myBoard) {
+//        this.myBoard = myBoard;
+//    }
 }
+

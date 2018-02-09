@@ -1,57 +1,82 @@
 package com.horizons.Battleship.model;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
+@Table(name="grid")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Grid {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
-//    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Integer boardId;
-    private String status;
-    private String isAlive;
+    private Integer row;
+    private Integer col;
+    private Boolean isAlive;
 
-    @Autowired
-    public Grid(Integer boardId){
-        this.boardId = boardId;
-        this.status = null;
-        this.isAlive = null;
-    }
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="BOARD_ID")
+    private Board board;
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="SHIP_ID")
+    private Ship ship;
 
-    public void setIsAlive(String isAlive) {
-        this.isAlive = isAlive;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public String getIsAlive() {
-        return isAlive;
+    public Grid(){}
+    public Grid(Integer row, Integer col, Board board){
+        this.row = row;
+        this.col = col;
+        this.board = board;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public Integer getBoard() {
-        return boardId;
-    }
-
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public void setBoardId(Integer boardId) {
-        this.boardId = boardId;
+    public Integer getRow() {
+        return row;
+    }
+
+    public void setRow(Integer row) {
+        this.row = row;
+    }
+
+    public Integer getCol() {
+        return col;
+    }
+
+    public void setCol(Integer col) {
+        this.col = col;
+    }
+
+    public Boolean getAlive() {
+        return isAlive;
+    }
+
+    public void setAlive(Boolean alive) {
+        isAlive = alive;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    public Ship getShip() {
+        return ship;
+    }
+
+    public void setShip(Ship ship) {
+        this.ship = ship;
     }
 }

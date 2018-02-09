@@ -1,52 +1,84 @@
 package com.horizons.Battleship.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.*;
-import java.util.Map;
 
 @Entity
+@Table(name="board")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Board {
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private User user;
-    private HashMap board;
+    @OneToMany(mappedBy="board", cascade = {CascadeType.ALL})
+    private Set<Grid> board;
+
+//    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+//    @JoinColumn(name="GAME_ID")
+//    private Integer game_id;
+
+    @OneToMany(mappedBy="shipOnBoard", cascade = {CascadeType.ALL})
+    private Set<Ship> shipOnBoard;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
-    @Autowired
-    public Board(User user){
-        this.user = user;
-        this.board = new HashMap<>(100);
-        Integer row = 1;
-        while(row < 11){
-            Integer col = 1;
-            while(col < 11){
-                List location = Arrays.asList(row, col);
-                Grid newGrid = new Grid(id);
-                board.put(location, newGrid);
-                col ++;
-            }
-            row ++;
-        }
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id")
+//    private User user;
+
+    public Board(){}
+    public Board(Set<Ship> shipOnBoard, Set<Grid> board){
+        this.board = board;
+        this.shipOnBoard = shipOnBoard;
     }
 
-    public User getUser() {
-        return user;
+    public Integer getId() {
+        return id;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public Map getBoard() {
+    public Set<Grid> getBoard() {
         return board;
     }
 
-    public void setBoard(HashMap board) {
+    public void setBoard(Set<Grid> board) {
         this.board = board;
     }
+
+    public Set<Ship> getShipOnBoard() {
+        return shipOnBoard;
+    }
+
+    public void setShipOnBoard(Set<Ship> shipOnBoard) {
+        this.shipOnBoard = shipOnBoard;
+    }
+
+    public void addShip(Ship newShip){
+        this.shipOnBoard.add(newShip);
+    }
+
+    public Grid findGrid(Board board, Integer row, Integer col) throws RuntimeException{
+        Set<Grid> setOfGrid = board.getBoard();
+        for(Grid temp : setOfGrid){
+            if(temp.getRow() == row && temp.getCol()==col){
+                return temp;
+            }
+        }
+        throw new RuntimeException("could not find element!");
+    }
+
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 }
