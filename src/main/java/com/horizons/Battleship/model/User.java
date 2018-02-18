@@ -15,9 +15,18 @@ public class User {
     private Integer id;
     private String username;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy="user")
-    private Board userBoards;
+//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy="users")
+//    private Board board;
 
+    public User(){}
+
+//    public User(Board board){
+//        this.board = board;
+//    }
+
+    public User(String username){
+        this.username = username;
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     public Integer getId() {
@@ -36,12 +45,12 @@ public class User {
         this.username = username;
     }
 
-    public Board getUserBoards() {
-        return userBoards;
-    }
-
-    public void setUserBoards(Board userBoards) {
-        this.userBoards = userBoards;
-    }
+//    public Board getBoard() {
+//        return board;
+//    }
+//
+//    public void setBoard(Board board) {
+//        this.board = board;
+//    }
 }
 

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 public class BoardController {
     private BoardDao boardDao;
     private GridDao gridDao;
@@ -40,10 +41,10 @@ public class BoardController {
         return gameDao.save(new Game());
     }
 
-    @RequestMapping(path="/createBoard", method= RequestMethod.POST)
-    public Board createBoard(@RequestBody Integer userId){
+    @RequestMapping(path="/createNewBoard", method= RequestMethod.POST)
+    public Board createNewBoard(@RequestBody Integer userId){
         User currUser = userDao.findById(userId);
-        Board newBoard = new Board(currUser);
+        Board newBoard = new Board();
         System.out.print(newBoard.getId());
         Set newSet = new HashSet<>();
         Integer row = 1;
@@ -60,6 +61,13 @@ public class BoardController {
         newBoard.setBoard(newSet);
         return boardDao.save(newBoard);
     }
+
+    @RequestMapping(path="/getMyBoard", method=RequestMethod.POST)
+    public Board getMyBoard(@RequestBody Integer boardId){
+//        System.out.println(RequestBody);
+        return boardDao.findById(boardId.);
+    }
+
 
     @RequestMapping(path="/createBoardWithShip", method=RequestMethod.POST)
     public Board createBoardWithShip(@RequestBody Set<Grid> boardGrid,
